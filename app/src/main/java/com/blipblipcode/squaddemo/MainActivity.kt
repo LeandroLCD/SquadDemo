@@ -16,12 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.blipblipcode.squaddemo.ui.theme.SquadDemoTheme
-import com.blipblipcode.squaddemo.ui.utilities.inToPx
 import com.blipblipcode.squaddemo.ui.utilities.toCm
-import com.blipblipcode.squaddemo.ui.utilities.toDp
 import com.blipblipcode.squaddemo.ui.utilities.toInches
 import dagger.hilt.android.AndroidEntryPoint
+
 val TAG = "Measure"
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +33,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
                         Greeting("Android") // Ctrl + Ship + Up / Dow
                     }
