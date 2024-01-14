@@ -53,7 +53,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier.fillMaxSize(),
         onTextLayout = {
-            var x = it.size
+            val x = it.size
             Log.d(TAG, "Greeting: ${x.height}") // 4.859 in
             Log.d(TAG, "Greeting: ${x.width}")  // 2.454 in
             val density = Resources.getSystem().displayMetrics.density
