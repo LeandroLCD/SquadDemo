@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "41436345108",
+    "project_id": "squaddemo-b6e69",
+    "storage_bucket": "squaddemo-b6e69.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41436345108:android:65c615bc6e5ca1e0f58801",
+        "android_client_info": {
+          "package_name": "com.blipblipcode.squaddemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3wJ4sYkGNaXhLGLzY9dNLGJMLM_EZM_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
