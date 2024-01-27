@@ -13,10 +13,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.blipblipcode.squaddemo.ui.home.models.StrokeLine
 import com.blipblipcode.squaddemo.ui.utilities.cmToPx
 import com.blipblipcode.squaddemo.ui.utilities.inToPx
 import com.blipblipcode.squaddemo.ui.utilities.toPx
@@ -35,7 +39,7 @@ fun MeasureContent() {
             .background(Color.Blue)
     ) {
 
-        MeasureSquad(height = maxHeight, width = maxWidth)
+        MeasureSquad(height = maxHeight, width = maxWidth, udm = Udm.Inches)
     }
 }
 
@@ -43,8 +47,15 @@ fun MeasureContent() {
 fun MeasureSquad(
     height: Dp,
     width: Dp,
-    udm: Udm = Udm.Centimeter,
-    rulerSize: Size = Size(100.dp.toPx(), 150.dp.toPx())
+    udm: Udm,
+    rulerSize: Size = Size(100.dp.toPx(), 150.dp.toPx()),
+    textStyle: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    backgroundColor: Color = Color.Yellow,
+    principalLine: StrokeLine = StrokeLine(30.dp, 4f, Color.Black),
+    secondaryLine: StrokeLine = StrokeLine(10.dp, 1f, Color.Black)
 ) {
     //region Fields
     val textMeasurer = rememberTextMeasurer()
@@ -71,86 +82,165 @@ fun MeasureSquad(
             .width(width)
     ) {
 
+
         val countY = size.height / scaleRuler
 
         val countX = size.width / scaleRuler
 
         //region Frame
-        val frameRuler = Path().apply {
-            moveTo(x = 0f, y = 0f) // P0
-            lineTo(x = size.width, y = 0f) // P1
-            lineTo(x = size.width, y = rulerSize.height * 0.5f) // P2
-            lineTo(x = size.width - (rulerSize.height * 0.5f), y = rulerSize.height) //P3
-            lineTo(x = rulerSize.width, y = rulerSize.height) // P4
-            lineTo(x = rulerSize.width, y = size.height - (rulerSize.width * 0.5f)) // P5
-            lineTo(x = rulerSize.width * 0.5f, y = size.height)
-            lineTo(x = 0f, y = size.height)
+        val frame = Path().apply {
+            moveTo(0f, 0f) //P0
+            lineTo(size.width, 0f) //P1
+
+            lineTo(size.width, rulerSize.height * 0.5f) // P2
+
+            lineTo(
+                size.width - rulerSize.height * 0.5f,
+                rulerSize.height
+            ) //P3
+
+            lineTo(rulerSize.width, rulerSize.height) // P4
+
+            lineTo(
+                rulerSize.width,
+                size.height - rulerSize.width * 0.5f
+            ) // P5
+
+            lineTo(rulerSize.width * 0.5f, size.height)
+
+            lineTo(0f, size.height) // P6
             close()
         }
 
-        drawPath(frameRuler, Color.Magenta)
+
+        drawPath(frame, backgroundColor)
         //endregion
 
-        //region LineZero
+        //region Line Zero
         drawLine(
-            Color.Black,
+            color = principalLine.color,
             start = Offset.Zero,
-            end = Offset(x = rulerSize.width * 0.15f, y = rulerSize.width * 0.15f),
-            strokeWidth = 4f
+            end = Offset(secondaryLine.width.toPx() * 0.3f, secondaryLine.width.toPx() * 0.3f),
+            strokeWidth = principalLine.stroke
         )
+
         //endregion
-        // valor  -- 100
-        //  x      -- 1
+
+        //region Vertical measure
 
 
         for (it in 0 until countY.toInt()) {
             val yPoint = (it + 1) * scaleRuler
 
-            //linea secundaria
+            //Secondary line
+
+            for (st in 1 until 10) {
+
+                drawLine(
+                    color = secondaryLine.color,
+                    start = Offset(0f, yPoint - (scaleRuler.times(st).div(10f))),
+                    end = Offset(
+                        secondaryLine.width.toPx().div(2f),
+                        yPoint - (scaleRuler.times(st).div(10f))
+                    ),
+                    strokeWidth = 2f
+                )
+            }
+
             drawLine(
-                Color.Black,
-                start = Offset(x = 0f, y = yPoint - (scaleRuler * 0.5f)),
-                end = Offset(x = 20f, y = yPoint - (scaleRuler * 0.5f)),
+                color = secondaryLine.color,
+                start = Offset(0f, yPoint - (scaleRuler.div(2))),
+                end = Offset(secondaryLine.width.toPx(), yPoint - (scaleRuler.div(2))),
+                strokeWidth = secondaryLine.stroke
+            )
+            //Primary Line
+            drawLine(
+                color = principalLine.color,
+                start = Offset(0f, yPoint),
+                end = Offset(principalLine.width.toPx(), yPoint),
+                strokeWidth = principalLine.stroke
+            )
+
+            //
+
+            //Label measure
+
+            rotate(
+                degrees = 270f,
+                pivot = Offset(
+                    principalLine.width.toPx() + (9f * density),
+                    yPoint - (3f * density)
+                )
+            ) {
+                drawText(
+                    textMeasurer = textMeasurer,
+                    text = "${it + 1}",
+                    topLeft = Offset(
+                        principalLine.width.toPx() + (3f * density),
+                        yPoint - (9f * density)
+                    ),
+                    style = textStyle
+                )
+
+            }
+
+
+        }
+
+
+        //endregion
+
+        //region Horizontal measure
+
+
+        for (it in 0 until countX.toInt()) {
+            val xPoint = (it + 1) * scaleRuler
+
+            //Secondary line
+            for (st in 1 until 10) {
+
+                drawLine(
+                    color = secondaryLine.color,
+                    start = Offset(xPoint - (scaleRuler.times(st).div(10f)), 0f),
+                    end = Offset(
+                        xPoint - (scaleRuler.times(st).div(10f)),
+                        secondaryLine.width.toPx().div(2f)
+                    ),
+                    strokeWidth = 2f
+                )
+            }
+            drawLine(
+                color = secondaryLine.color,
+                start = Offset(xPoint - (scaleRuler.div(2f)), 0f),
+                end = Offset(xPoint - (scaleRuler.div(2f)), secondaryLine.width.toPx()),
                 strokeWidth = 2f
             )
-
-
-            //linea Principal
+            //Primary Line
             drawLine(
-                Color.Black,
-                start = Offset(x = 0f, y = yPoint),
-                end = Offset(x = 70f, y = yPoint),
-                strokeWidth = 4f
+                color = principalLine.color,
+                start = Offset(xPoint, 0f),
+                end = Offset(xPoint, principalLine.width.toPx()),
+                strokeWidth = principalLine.stroke
+            )
+            //Label measure
+
+            drawText(
+                textMeasurer = textMeasurer,
+                text = "${it + 1}",
+                topLeft = Offset(
+                    xPoint - (3f * density),
+                    principalLine.width.toPx() + (3f * density)
+                ),
+                style = textStyle
             )
 
-            //rotulacion de la regla
-            if (it == 0) {
-                rotate(
-                    degrees = 315f,
-                    pivot = Offset(scaleRuler, scaleRuler)
-                ) {
-                    drawText(
-                        textMeasurer = textMeasurer,
-                        text = "1",
-                        topLeft = Offset(scaleRuler, scaleRuler - (5f * density))
-                    )
-                }
-            } else {
-                rotate(
-                    degrees = 270f,
-                    pivot = Offset(scaleRuler + (3f * density), yPoint + (3f * density))
-                ) {
-                    drawText(
-                        textMeasurer = textMeasurer,
-                        text = "${it + 1}",
-                        topLeft = Offset(scaleRuler, yPoint + (9f * density))
-                    )
-                }
-            }
-        }
-        /*repeat(countX.toInt()){
 
-        }*/
+        }
+
+
+        //endregion
+
+
     }
 
 }
