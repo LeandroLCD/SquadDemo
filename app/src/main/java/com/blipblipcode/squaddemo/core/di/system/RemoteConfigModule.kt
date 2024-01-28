@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RemoteConfigModule {
+object RemoteConfigModule {
 
     @Provides
     fun provideRemoteConfig(): FirebaseRemoteConfig = Firebase.remoteConfig

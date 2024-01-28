@@ -1,5 +1,6 @@
 package com.blipblipcode.squaddemo.ui.start
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -11,16 +12,19 @@ import com.blipblipcode.squaddemo.ui.start.state.SplashUiState
 import com.blipblipcode.squaddemo.ui.utilities.getPackageInfoCompat
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StartViewModel @Inject constructor(
+class StartViewModel @SuppressLint("StaticFieldLeak")
+@Inject constructor(
     private val remoteConfig: FirebaseRemoteConfig,
-    @ApplicationContext private val context: Context
+    private val context: Context,
+    private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
     //region Field - States
     var urlPlayStore by mutableStateOf("")
@@ -32,7 +36,7 @@ class StartViewModel @Inject constructor(
 
     //region Methods
     fun onCheckedVersion() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherIO) {
             remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val versionMinima = remoteConfig.getString("version_minima")
@@ -70,12 +74,13 @@ class StartViewModel @Inject constructor(
                         inputStream.close()
 
                         viewModelScope.launch(Dispatchers.Main) {
-
+                            delay(2000)
                             uiState.emit(SplashUiState.RequireUpdate)
                         }
 
                     } else {
                         viewModelScope.launch(Dispatchers.Main) {
+                            delay(2000)
                             Log.d("TAG", "onCheckedVersion: ${task.isSuccessful}")
                             uiState.emit(SplashUiState.Navigate)
                         }

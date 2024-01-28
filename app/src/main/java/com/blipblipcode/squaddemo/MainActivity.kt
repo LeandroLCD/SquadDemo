@@ -17,15 +17,21 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @Inject
     lateinit var remoteConfig: FirebaseRemoteConfig
     override fun onCreate(savedInstanceState: Bundle?) {
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
-            // minimumFetchIntervalInSeconds = 3600
-        })
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+
 
         super.onCreate(savedInstanceState)
+
+        remoteConfig.let { remote ->
+            remote.setConfigSettingsAsync(remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 3600
+            })
+            remote.setDefaultsAsync(R.xml.remote_config_defaults)
+        }
+
         setContent {
             SquadDemoTheme {
                 // A surface container using the 'background' color from the theme
@@ -35,6 +41,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHosting()
                 }
+
             }
         }
     }

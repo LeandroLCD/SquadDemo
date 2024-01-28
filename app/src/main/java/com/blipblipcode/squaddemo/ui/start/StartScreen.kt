@@ -44,10 +44,8 @@ import com.blipblipcode.squaddemo.ui.graphNavigation.Screens
 import com.blipblipcode.squaddemo.ui.start.state.SplashUiState
 
 @Composable
-fun SplashScreen(viewModel: StartViewModel = hiltViewModel(), navGo: (String) -> Unit) {
-    var urlPlayStore by remember {
-        mutableStateOf("")
-    }
+fun StartScreen(viewModel: StartViewModel = hiltViewModel(), navGo: (String) -> Unit) {
+
     var isRequireUpdate by remember {
         mutableStateOf(false)
     }
@@ -65,7 +63,6 @@ fun SplashScreen(viewModel: StartViewModel = hiltViewModel(), navGo: (String) ->
 
         SplashUiState.RequireUpdate -> {
             isRequireUpdate = true
-            urlPlayStore = viewModel.urlPlayStore
         }
     }
 
@@ -154,8 +151,8 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
             composition,
             progress,
             modifier = Modifier
-                .width(400.dp)
-                .height(400.dp)
+                .width(200.dp)
+                .height(200.dp)
         )
     }
 }

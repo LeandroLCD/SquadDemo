@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.blipblipcode.squaddemo.ui.home.HomeScreen
-import com.blipblipcode.squaddemo.ui.start.SplashScreen
+import com.blipblipcode.squaddemo.ui.start.StartScreen
 
 @Composable
 fun NavHosting() {
@@ -15,7 +15,7 @@ fun NavHosting() {
 
 
         composable(route = Screens.Splash.route) {
-            SplashScreen { route ->
+            StartScreen { route ->
                 navController.popBackStack()
                 navController.navigate(route)
             }
