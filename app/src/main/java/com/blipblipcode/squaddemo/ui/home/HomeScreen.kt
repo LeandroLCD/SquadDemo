@@ -26,7 +26,7 @@ import com.blipblipcode.squaddemo.ui.utilities.inToPx
 import com.blipblipcode.squaddemo.ui.utilities.toPx
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navTo: (String) -> Unit) {
     MeasureContent()
 }
 

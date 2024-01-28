@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SquadDemo</string>
+    <string name="requiere_update">Tenemos una nueva versión disponible. Por favor actualiza para que sigas disfrutando de este strem</string>
+    <string name="update">Update</string>
 </resources>
