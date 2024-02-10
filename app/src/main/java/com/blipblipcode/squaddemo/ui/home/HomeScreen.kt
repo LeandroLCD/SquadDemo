@@ -1,12 +1,15 @@
 package com.blipblipcode.squaddemo.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -18,6 +21,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.blipblipcode.squaddemo.ui.home.models.StrokeLine
@@ -33,13 +37,40 @@ fun HomeScreen(navTo: (String) -> Unit) {
 @Composable
 fun MeasureContent() {
     //var rowSize by remember { mutableStateOf(Size.Zero) } // myModifier.onGloballyPositioned
+
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Blue)
+
     ) {
 
-        MeasureSquad(height = maxHeight, width = maxWidth, udm = Udm.Inches)
+
+        MeasureSquad(
+            height = maxHeight,
+            width = maxWidth,
+            udm = Udm.Inches
+        )
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
+
+            IndicatorMeasure(DpSize(100.dp, 30.dp), Color.Magenta) {
+                Log.d("IndicatorMeasure", "MeasureContent A:$it ")
+                //TODO viewModel.onChangedValue(it, b)
+            }
+            IndicatorMeasure(DpSize(100.dp, 30.dp), Color.Magenta) {
+                Log.d("IndicatorMeasure", "MeasureContent B:$it ")
+                //TODO viewModel.onChangedValue(it, b)
+            }
+
+        }
+
+        /*IndicatorMeasure( DpSize(100.dp, 30.dp), Color.Yellow, ini= 200f){
+            //TODO viewModel.onChangedValue(a,it)
+            Log.d("IndicatorMeasure", "MeasureContent B:$it ")
+        }*/
+
+
     }
 }
 
@@ -239,6 +270,8 @@ fun MeasureSquad(
 
 
         //endregion
+
+        //pintamos los dedos en la pantalla
 
 
     }
