@@ -2,10 +2,12 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     //Dagger Hilt
-    kotlin("kapt")
+
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    //Ksp
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -65,24 +67,34 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation ("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material-icons-extended")
 
+    implementation("androidx.activity:activity:1.8.2")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
     //Navigation en Screen
-    implementation ("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     //Animations Lottie
-    implementation ("com.airbnb.android:lottie-compose:4.0.0")
+    implementation("com.airbnb.android:lottie-compose:4.0.0")
 
     //region Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
     //endregion
 
     //region FireBase
-    implementation("com.google.firebase:firebase-crashlytics:18.6.1")
-    implementation("com.google.firebase:firebase-analytics:21.5.0")
-    implementation("com.google.firebase:firebase-config:21.6.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.6.2")
+    implementation("com.google.firebase:firebase-analytics:21.5.1")
+    implementation("com.google.firebase:firebase-config:21.6.1")
 
+    //endregion
+
+    //region ROOM
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
     //endregion
 
 
@@ -93,7 +105,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-}
-kapt {
-    correctErrorTypes = true
 }

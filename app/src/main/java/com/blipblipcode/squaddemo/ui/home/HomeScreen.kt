@@ -3,19 +3,24 @@ package com.blipblipcode.squaddemo.ui.home
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import com.blipblipcode.squaddemo.ui.home.models.StrokeLine
 import com.blipblipcode.squaddemo.ui.utilities.cmToPx
 import com.blipblipcode.squaddemo.ui.utilities.inToPx
@@ -36,39 +42,63 @@ fun HomeScreen(navTo: (String) -> Unit) {
 
 @Composable
 fun MeasureContent() {
-    //var rowSize by remember { mutableStateOf(Size.Zero) } // myModifier.onGloballyPositioned
-
+    var sizeWindow by remember {
+        mutableStateOf(Size.Zero)
+    } // myModifier.onGloballyPositioned
+    var heightStatusBar by remember {
+        mutableStateOf(Offset.Zero)
+    }
 
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Blue)
+            .onGloballyPositioned {
+                sizeWindow = it.size.toSize()
+                heightStatusBar = it.positionInWindow()
+
+
+            }
 
     ) {
 
+        var finger1 by remember {
+            mutableFloatStateOf(0f)
+        }
+
+        var finger2 by remember {
+            mutableFloatStateOf(maxHeight.toPx().minus(200f))
+        }
 
         MeasureSquad(
             height = maxHeight,
             width = maxWidth,
             udm = Udm.Inches
         )
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
+        IndicatorMeasure(
+            sizeDp = DpSize(100.dp, 30.dp),
+            backgroundColor = Color.Magenta,
+            sizeWindow = Size(maxWidth.toPx(), maxHeight.toPx()),
+            isRight = true,
+            udm = Udm.Inches
+        ) {
+            finger1 = it
 
-            IndicatorMeasure(DpSize(100.dp, 30.dp), Color.Magenta) {
-                Log.d("IndicatorMeasure", "MeasureContent A:$it ")
-                //TODO viewModel.onChangedValue(it, b)
-            }
-            IndicatorMeasure(DpSize(100.dp, 30.dp), Color.Magenta) {
-                Log.d("IndicatorMeasure", "MeasureContent B:$it ")
-                //TODO viewModel.onChangedValue(it, b)
-            }
-
+            Log.d("IndicatorMeasure", "MeasureContent A:$it ")
+            //TODO viewModel.onChangedValue(it, b)
         }
 
-        /*IndicatorMeasure( DpSize(100.dp, 30.dp), Color.Yellow, ini= 200f){
-            //TODO viewModel.onChangedValue(a,it)
-            Log.d("IndicatorMeasure", "MeasureContent B:$it ")
-        }*/
+        IndicatorMeasure(
+            sizeDp = DpSize(100.dp, 30.dp),
+            backgroundColor = Color.Red,
+            sizeWindow = Size(maxWidth.toPx(), maxHeight.toPx()),
+            onChanged = {
+                finger2 = it
+                Log.d("IndicatorMeasure", "MeasureContent A:$it ")
+                //TODO viewModel.onChangedValue(it, b)
+            },
+            udm = Udm.Inches
+        )
 
 
     }
@@ -94,6 +124,18 @@ fun MeasureSquad(
         Udm.Inches -> 1f.inToPx()
         Udm.Centimeter -> 1f.cmToPx()
     }
+
+    /*var countdownValue by remember { mutableStateOf(5) }
+    var isCounting by remember { mutableStateOf(false) }
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    val windowManager = remember {
+        mutableStateOf(
+            WindowCompat.getInsetsController(window, view)
+        )
+    }*/
+
+
     //endregion
 
     /*
@@ -106,11 +148,29 @@ fun MeasureSquad(
         P6	X: rulerSize.width *0.5f, Y: size.height
         P7	X:0 , Y: size.height
     * */
-
     Canvas(
         modifier = Modifier
             .height(height)
             .width(width)
+        /*.pointerInput(Unit) {
+
+            if (!isCounting) {
+                isCounting = true
+                object : CountDownTimer((countdownValue * 1000).toLong(), 1000) {
+
+                    override fun onTick(millisUntilFinished: Long) {
+                        countdownValue--
+                       // windowManager.value.show(WindowInsetsCompat.Type.statusBars())
+                    }
+
+                    override fun onFinish() {
+                        windowManager.value.hide(WindowInsetsCompat.Type.statusBars())
+                        isCounting = false
+
+                    }
+                }.start()
+            }
+        }*/
     ) {
 
 
