@@ -4,9 +4,16 @@ import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SaveAs
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -30,18 +37,20 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.blipblipcode.squaddemo.ui.home.models.StrokeLine
 import com.blipblipcode.squaddemo.ui.utilities.cmToPx
 import com.blipblipcode.squaddemo.ui.utilities.inToPx
 import com.blipblipcode.squaddemo.ui.utilities.toPx
 
 @Composable
-fun HomeScreen(navTo: (String) -> Unit) {
-    MeasureContent()
+fun HomeScreen(viewModel: HomeScreenViewModel = hiltViewModel()) {  //navTo: (String) -> Unit,
+    //var view = hiltViewModel<HomeScreenViewModel>()
+    MeasureContent(viewModel)
 }
 
 @Composable
-fun MeasureContent() {
+fun MeasureContent(viewModel: HomeScreenViewModel) {
     var sizeWindow by remember {
         mutableStateOf(Size.Zero)
     } // myModifier.onGloballyPositioned
@@ -62,6 +71,7 @@ fun MeasureContent() {
 
     ) {
 
+
         var finger1 by remember {
             mutableFloatStateOf(0f)
         }
@@ -75,6 +85,15 @@ fun MeasureContent() {
             width = maxWidth,
             udm = Udm.Inches
         )
+        Card {
+            Row {
+                Text(text = "${viewModel.measure}")
+                IconButton(onClick = { viewModel.onSaveMeasure(measure = viewModel.measure) }) {
+                    Icon(imageVector = Icons.Outlined.SaveAs, contentDescription = "Save")
+                }
+            }
+        }
+
         IndicatorMeasure(
             sizeDp = DpSize(100.dp, 30.dp),
             backgroundColor = Color.Magenta,
@@ -85,7 +104,7 @@ fun MeasureContent() {
             finger1 = it
 
             Log.d("IndicatorMeasure", "MeasureContent A:$it ")
-            //TODO viewModel.onChangedValue(it, b)
+            viewModel.onChangedValue(finger1, finger2)
         }
 
         IndicatorMeasure(
@@ -95,7 +114,7 @@ fun MeasureContent() {
             onChanged = {
                 finger2 = it
                 Log.d("IndicatorMeasure", "MeasureContent A:$it ")
-                //TODO viewModel.onChangedValue(it, b)
+                viewModel.onChangedValue(finger1, finger2)
             },
             udm = Udm.Inches
         )

@@ -21,11 +21,11 @@ fun NavHosting() {
             }
         }
         composable(route = Screens.Home.route) {
-            HomeScreen { route ->
+            HomeScreen() /*{ route ->
                 navController.navigate(route) {
                     popUpTo(Screens.Home.route)
                 }
-            }
+            }*/
         }
 
     }
