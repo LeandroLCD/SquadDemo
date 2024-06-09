@@ -1,5 +1,6 @@
 package com.blipblipcode.squaddemo.core.work
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
@@ -19,6 +20,7 @@ import com.blipblipcode.squaddemo.data.MeasureRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -28,6 +30,7 @@ class SyncUpWorker @AssistedInject constructor(@Assisted private val appContext:
     CoroutineWorker(appContext, workerParams) {
 
         val TAG = "SyncUpWorker"
+    @SuppressLint("SuspiciousIndentation")
     override suspend fun doWork(): Result {
         Log.d(TAG, "doWork: Running")
         showNotification(TAG, " b")
@@ -37,14 +40,14 @@ class SyncUpWorker @AssistedInject constructor(@Assisted private val appContext:
                 Log.d(TAG, it.toString())
                 showNotification(TAG, "hay ")
             }
-        showNotification(TAG, "hay ${list.size}, en la base de datos")
+        showNotification(TAG, "hay ${list.size}, en la base de datos. ${Date()}")
         return Result.success()
     }
 
     companion object {
         val TAG = "SyncUpWorker"
 
-        private const val DEFAULT_MIN_INTERVAL = 1L
+        private const val DEFAULT_MIN_INTERVAL = 5L
 
         fun oneTimeWorkRequest(): OneTimeWorkRequest {
             val constrains = Constraints.Builder()

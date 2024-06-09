@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import android.Manifest
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,10 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import com.blipblipcode.squaddemo.data.SyncUpRepository
 import com.blipblipcode.squaddemo.ui.graphNavigation.NavHosting
 import com.blipblipcode.squaddemo.ui.theme.SquadDemoTheme
+import com.blipblipcode.squaddemo.ui.utilities.dateIsGreater
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,14 +69,12 @@ class MainActivity : ComponentActivity() {
             remote.setDefaultsAsync(R.xml.remote_config_defaults)
         }
 
-        syncUpRepository.runWork()
-        lifecycleScope.launch {
-            syncUpRepository.liveData().collect{
-                Toast.makeText(applicationContext, it[0].state.toString(), Toast.LENGTH_LONG).show()
-            }
-        }
-        createNotificationChannel()
+        val date = "2024-05-17T14:09:51.711548"
+        date.dateIsGreater(10L)
 
+
+        createNotificationChannel()
+        lifecycle.addObserver(eventObserver())
         setContent {
             SquadDemoTheme {
                 // A surface container using the 'background' color from the theme
@@ -87,7 +89,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+    private fun eventObserver() = LifecycleEventObserver{ _, event ->
+        Log.i("runWork", "eventObserver: $event")
+    }
     private fun createNotificationChannel() {
         // Crea el canal de notificaciones solo para API 26+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -102,6 +106,11 @@ class MainActivity : ComponentActivity() {
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun onDestroy() {
+        syncUpRepository.runWork()
+        super.onDestroy()
     }
 }
 

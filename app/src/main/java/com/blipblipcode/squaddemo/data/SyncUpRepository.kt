@@ -19,7 +19,6 @@ class SyncUpRepository (private val appContext: Context) {
     }
     fun runWork() {
         Log.d("SyncUpWorker", "runWork: ")
-        val workManager = workManager
         workManager.enqueueUniqueWork(
             "sync_work",
             ExistingWorkPolicy.REPLACE,
@@ -29,7 +28,7 @@ class SyncUpRepository (private val appContext: Context) {
     }
 
     fun runPeriodicWork() {
-        val workManager = WorkManager.getInstance(appContext)
+        Log.d("SyncUpWorker", "runWork: ")
         workManager.enqueueUniquePeriodicWork(
             SyncUpWorker.TAG,
             ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
