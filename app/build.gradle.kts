@@ -69,23 +69,31 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
 
-    implementation("androidx.activity:activity:1.8.2")
+    implementation("androidx.activity:activity:1.9.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
     //Navigation en Screen
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //Animations Lottie
-    implementation("com.airbnb.android:lottie-compose:4.0.0")
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
 
     //region Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("com.google.dagger:hilt-android:2.49")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp("com.google.dagger:hilt-android-compiler:2.48")
+
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+    //endregion
+
+    //region work
+    implementation("androidx.work:work-runtime:2.9.0")
+
     //endregion
 
     //region FireBase
-    implementation("com.google.firebase:firebase-crashlytics:18.6.2")
-    implementation("com.google.firebase:firebase-analytics:21.5.1")
-    implementation("com.google.firebase:firebase-config:21.6.1")
+    implementation("com.google.firebase:firebase-crashlytics:19.0.1")
+    implementation("com.google.firebase:firebase-analytics:22.0.1")
+    implementation("com.google.firebase:firebase-config:22.0.0")
 
     //endregion
 
